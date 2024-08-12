@@ -27,3 +27,12 @@ services:
       - POSTGRES_USER=$DB_USER
       - POSTGRES_PASSWORD=$DB_PASS
       - PGDATA=/var/lib/postgresql/data/pgdata
+  ngrok:
+    image: ngrok/ngrok:3.14.0-debian
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    command: http app:3000
+    depends_on:
+      - app
+    ports:
+      - "4040:4040"
