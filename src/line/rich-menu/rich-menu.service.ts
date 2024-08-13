@@ -5,28 +5,51 @@ import {
   MessagingApiClient,
 } from '@line/bot-sdk/dist/messaging-api/api';
 import { RICH_MENU_REQUEST_A } from '../const/rich-menu-request-a';
-import { join } from 'path';
 import { promises } from 'fs';
+import { AppService } from 'src/app.service';
+import { RICH_MENU_REQUEST_B } from '../const/rich-menu-request-b';
 
 @Injectable()
 export class RichMenuService {
   private readonly client: MessagingApiClient;
   private readonly blobClient: MessagingApiBlobClient;
 
-  constructor(configService: ConfigService) {
+  constructor(
+    configService: ConfigService,
+    private readonly appService: AppService,
+  ) {
     this.client = configService.createLinebotClient();
     this.blobClient = configService.createLinebotBlobClient();
   }
 
   async create() {
-    // const richMenuAId = this.client.createRichMenu(RICH_MENU_REQUEST_A);
-    // await this.setRichMenuImage(richMenuAId, );
-    console.log(__dirname);
+    const { richMenuId: richMenuAId } = await this.client.createRichMenu(
+      RICH_MENU_REQUEST_A,
+    );
+    await this.setRichMenuImage(richMenuAId, '/images/richmenu-a.png');
+    const { richMenuId: richMenuBId } = await this.client.createRichMenu(
+      RICH_MENU_REQUEST_B,
+    );
+    await this.setRichMenuImage(richMenuBId, '/images/richmenu-b.png');
+    await this.client.setDefaultRichMenu(richMenuAId);
+    await this.client.createRichMenuAlias({
+      richMenuAliasId: 'richmenu-alias-a',
+      richMenuId: richMenuAId,
+    });
+    await this.client.createRichMenuAlias({
+      richMenuAliasId: 'richmenu-alias-b',
+      richMenuId: richMenuBId,
+    });
+    console.log('success');
   }
 
+  // path は /images/a.png のような assets 配下のパスを指定する
   async setRichMenuImage(richMenuId: string, path: string) {
-    const filepath = join(__dirname, path);
-    const buffer = await promises.readFile(filepath);
-    this.blobClient.setRichMenuImage(richMenuId, new Blob([buffer]));
+    const assetsPath = this.appService.getAssetsPath();
+    const buffer = await promises.readFile(assetsPath + path);
+    await this.blobClient.setRichMenuImage(
+      richMenuId,
+      new Blob([buffer], { type: 'image/png' }),
+    );
   }
 }
