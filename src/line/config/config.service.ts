@@ -3,11 +3,16 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ConfigService {
+  private readonly clientConfig: ClientConfig = {
+    channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
+    channelSecret: process.env.CHANNEL_SECRET,
+  };
+
   createLinebotClient() {
-    const clientConfig: ClientConfig = {
-      channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
-      channelSecret: process.env.CHANNEL_SECRET,
-    };
-    return new messagingApi.MessagingApiClient(clientConfig);
+    return new messagingApi.MessagingApiClient(this.clientConfig);
+  }
+
+  createLinebotBlobClient() {
+    return new messagingApi.MessagingApiBlobClient(this.clientConfig);
   }
 }

@@ -4,7 +4,7 @@ import { WebhookRequestBody } from '@line/bot-sdk';
 
 @Injectable()
 export class LineService {
-  constructor(private configService: ConfigService) {}
+  constructor(private readonly configService: ConfigService) {}
 
   async handleWebhook(req: WebhookRequestBody): Promise<void> {
     const client = this.configService.createLinebotClient();

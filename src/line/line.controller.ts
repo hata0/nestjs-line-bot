@@ -4,7 +4,7 @@ import { WebhookRequestBody } from '@line/bot-sdk';
 
 @Controller('line')
 export class LineController {
-  constructor(private lineService: LineService) {}
+  constructor(private readonly lineService: LineService) {}
 
   @Post()
   async handler(@Body() req: WebhookRequestBody) {
