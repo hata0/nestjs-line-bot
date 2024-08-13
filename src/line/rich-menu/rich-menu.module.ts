@@ -10,6 +10,7 @@ export class RichMenuModule implements OnModuleInit {
   constructor(private readonly richMenuService: RichMenuService) {}
 
   async onModuleInit() {
+    await this.richMenuService.reset();
     await this.richMenuService.create();
   }
 }

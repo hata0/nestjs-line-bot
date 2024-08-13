@@ -40,7 +40,18 @@ export class RichMenuService {
       richMenuAliasId: 'richmenu-alias-b',
       richMenuId: richMenuBId,
     });
-    console.log('success');
+  }
+
+  async reset() {
+    const richMenuAliasLists = await this.client.getRichMenuAliasList();
+    for (const richMenuAlias of richMenuAliasLists.aliases) {
+      await this.client.deleteRichMenuAlias(richMenuAlias.richMenuAliasId);
+    }
+
+    const richMenuLists = await this.client.getRichMenuList();
+    for (const richMenu of richMenuLists.richmenus) {
+      await this.client.deleteRichMenu(richMenu.richMenuId);
+    }
   }
 
   // path は /images/a.png のような assets 配下のパスを指定する
