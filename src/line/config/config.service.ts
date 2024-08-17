@@ -8,6 +8,8 @@ export class ConfigService {
     channelSecret: process.env.CHANNEL_SECRET,
   };
 
+  readonly frontendChannelId = process.env.FRONTEND_CHANNEL_ID;
+
   createLinebotClient() {
     return new messagingApi.MessagingApiClient(this.clientConfig);
   }

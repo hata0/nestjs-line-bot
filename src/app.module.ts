@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { LineModule } from './line/line.module';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaService } from './prisma/prisma.service';
+import { CountUpController } from './count-up/count-up.controller';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -11,8 +13,9 @@ import { PrismaService } from './prisma/prisma.service';
     ConfigModule.forRoot({
       envFilePath: ['.env'],
     }),
+    AuthModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, CountUpController],
   providers: [AppService, PrismaService],
 })
 export class AppModule {}
