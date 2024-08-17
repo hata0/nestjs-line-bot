@@ -21,10 +21,22 @@ export class LineAuthStrategy extends PassportStrategy(Strategy, 'line-auth') {
         idToken,
         this.config.frontendChannelId,
       );
-      console.log(data);
-      return data;
+      const user = await this.prisma.user.findUnique({
+        where: { id: data.sub },
+      });
+      if (!user) {
+        throw new UnauthorizedException('No user found for this token');
+      } else {
+        return data;
+      }
     } catch (e) {
-      throw new UnauthorizedException('Invalid Firebase token');
+      if (
+        e instanceof UnauthorizedException &&
+        e.message === 'No user found for this token'
+      ) {
+        throw e;
+      }
+      throw new UnauthorizedException('Invalid token');
     }
   }
 }
