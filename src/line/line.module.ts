@@ -9,5 +9,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
   controllers: [LineController],
   providers: [LineService, ConfigService, PrismaService],
   imports: [RichMenuModule],
+  exports: [ConfigService],
 })
 export class LineModule {}
