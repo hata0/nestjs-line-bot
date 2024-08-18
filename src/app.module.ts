@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaService } from './prisma/prisma.service';
 import { CountUpController } from './count-up/count-up.controller';
 import { AuthModule } from './auth/auth.module';
+import { GoogleMapModule } from './google-map/google-map.module';
+import { NearbyController } from './place/nearby/nearby.controller';
 
 @Module({
   imports: [
@@ -14,8 +16,9 @@ import { AuthModule } from './auth/auth.module';
       envFilePath: ['.env'],
     }),
     AuthModule,
+    GoogleMapModule,
   ],
-  controllers: [AppController, CountUpController],
+  controllers: [AppController, CountUpController, NearbyController],
   providers: [AppService, PrismaService],
 })
 export class AppModule {}
