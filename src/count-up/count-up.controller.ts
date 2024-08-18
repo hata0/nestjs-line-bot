@@ -12,7 +12,7 @@ export class CountUpController {
     private readonly config: ConfigService,
   ) {}
 
-  @Put('')
+  @Put()
   async putCountUp(@Req() req) {
     const data: VerifyIDToken = req.user;
     const user = await this.prisma.user.upsert({

@@ -7,7 +7,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { CountUpController } from './count-up/count-up.controller';
 import { AuthModule } from './auth/auth.module';
 import { GoogleMapModule } from './google-map/google-map.module';
-import { NearbyController } from './place/nearby/nearby.controller';
+import { PlacesController } from './places/places.controller';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { NearbyController } from './place/nearby/nearby.controller';
     AuthModule,
     GoogleMapModule,
   ],
-  controllers: [AppController, CountUpController, NearbyController],
+  controllers: [AppController, CountUpController, PlacesController],
   providers: [AppService, PrismaService],
 })
 export class AppModule {}
