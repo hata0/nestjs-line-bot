@@ -1,8 +1,10 @@
 import { Client, Language } from '@googlemaps/google-maps-services-js';
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { LineAuthGuard } from 'src/auth/line-auth.guard';
 import { ConfigService } from 'src/google-map/config/config.service';
 
 @Controller('places')
+@UseGuards(LineAuthGuard)
 export class PlacesController {
   private readonly client: Client;
 
@@ -12,28 +14,25 @@ export class PlacesController {
 
   @Get('nearby')
   async getNearbyPlaces() {
-    try {
-      const places = await this.client.placesNearby({
-        params: {
-          key: this.config.googleMapApiKey,
-          location: {
-            lat: 35.653398,
-            lng: 139.7973242,
-          },
-          radius: 200,
-          type: 'restaurant',
-          language: Language.ja,
+    const res = await this.client.placesNearby({
+      params: {
+        key: this.config.googleMapApiKey,
+        location: {
+          lat: 35.68105651609583,
+          lng: 139.76714872052918,
         },
-      });
-      console.log(places);
-      return places;
-    } catch (e) {
-      if (e instanceof Error) {
-        console.error(e.message);
-      } else {
-        console.error(String(e));
-      }
-      return 'error place nearby';
-    }
+        radius: 100,
+        type: 'restaurant',
+        language: Language.ja,
+      },
+    });
+    const placesData = res.data.results.map((result) => ({
+      name: result.name,
+      placeId: result.place_id,
+      photoReference: result.photos.length
+        ? result.photos[0].photo_reference
+        : undefined,
+    }));
+    return placesData;
   }
 }
